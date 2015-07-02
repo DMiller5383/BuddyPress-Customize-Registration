@@ -66,6 +66,7 @@
 					<?php /* Use the profile field loop to render input fields for the 'base' profile field group */ ?>
 					<?php $groups = bp_xprofile_get_groups(); ?>
 
+					<?php $field_ids = array(); ?>
 					<?php foreach ($groups as $group): ?>
 
 						<?php if ( bp_is_active( 'xprofile' ) ) : if ( bp_has_profile( array( 'profile_group_id' => $group->id, 'fetch_field_data' => false ) ) ) : while ( bp_profile_groups() ) : bp_the_profile_group(); ?>
@@ -76,9 +77,12 @@
 							
 							<?php if ( crfd_is_displayed_on_registration( bp_get_the_profile_field_id() ) ): ?>
 
+								<?php array_push( $field_ids, bp_get_the_profile_field_id()); ?>
+
 								<div<?php bp_field_css_class( 'editfield' ); ?>>
 
 									<?php
+
 
 									
 									$field_type = bp_xprofile_create_field_type( bp_get_the_profile_field_type() );
@@ -123,7 +127,9 @@
 
 					<?php endforeach; ?>
 
-					<input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids" value="1,2,3,4,5" />
+
+
+					<input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids" value="<?= implode( ',', $field_ids ) ?>" />
 
 					<?php do_action( 'bp_signup_profile_fields' ); ?>
 
